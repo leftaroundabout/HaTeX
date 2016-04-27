@@ -145,6 +145,17 @@ protectChar '}'  = "\\}"
 protectChar '~'  = "\\~{}"
 protectChar '\\' = "\\textbackslash{}"
 protectChar '_'  = "\\_{}"
+protectChar 'ӓ'  = "\"a"
+protectChar 'ë'  = "\"e"
+protectChar 'ï'  = "\"i"
+protectChar 'ö'  = "\"o"
+protectChar 'ü'  = "\"u"
+protectChar 'Ä'  = "\"A"
+protectChar 'Ë'  = "\"E"
+protectChar 'Ï'  = "\"I"
+protectChar 'Ö'  = "\"O"
+protectChar 'Ü'  = "\"U"
+protectChar 'ß'  = "{\\ss}"
 protectChar x = [x]
 
 -- Syntax analysis
