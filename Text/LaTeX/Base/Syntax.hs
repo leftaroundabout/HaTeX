@@ -156,6 +156,8 @@ protectChar 'Ï'  = "\"I"
 protectChar 'Ö'  = "\"O"
 protectChar 'Ü'  = "\"U"
 protectChar 'ß'  = "{\\ss}"
+protectChar '“'  = "``"
+protectChar '”'  = "''"
 protectChar x = [x]
 
 -- Syntax analysis
