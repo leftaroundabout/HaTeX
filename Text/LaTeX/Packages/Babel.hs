@@ -58,6 +58,7 @@ data Language =
  | Icelandic  -- ^ Icelandic.
  | Italian    -- ^ Italian.
  | Magyar     -- ^ Hungarian.
+ | Norsk      -- ^ Norwegian.
  | Portuguese -- ^ Portuguese.
  | Russian    -- ^ Russian.
  | Spanish    -- ^ Spanish.

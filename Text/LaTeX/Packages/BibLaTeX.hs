@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE DeriveFunctor     #-}
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE LambdaCase        #-}
 
 -- | <https://ctan.org/tex-archive/macros/latex/contrib/biblatex BibLaTeX>
 --   is a reference-citation package using @.bib@ files (BibTeX) but no extra style-files.
@@ -12,15 +13,20 @@ module Text.LaTeX.Packages.BibLaTeX
  , cite
  , printbibliography
  -- * Automatic bibliography retrieval
- , documentWithDOIReferences
- , PlainDOI
+ -- $autoBibRetr
+ -- ** Citing
  , citeDOI
+ , citeBib
  , textc
  , textC
- , DOIReference
- , ReferenceQueryT
+ -- ** Use in documents
+ , documentWithDOIReferences
  , applyDOIReferenceResolves
  , masterBibFile
+ -- ** Types
+ , PlainDOI
+ , DOIReference, DOIOrBibReference, BibTeX.T
+ , ReferenceQueryT
  ) where
 
 import Text.LaTeX.Base.Syntax hiding ((<>))
@@ -64,15 +70,49 @@ printbibliography :: LaTeXC l => l
 printbibliography = comm0 "printbibliography"
 
 
+-- $autoBibRetr
+-- The following are convenience tools, for using Haskell as a lightweight reference
+-- management system in addition to just directly wrapping LaTeX syntax. The intended
+-- use is with references that have a DOI available: a DOI is already sufficient to
+-- unambiguously point to a source. Keeping unwieldy BibTeX files is therefore unnecessary
+-- and redundant; use instead 'citeDOI', which only requires minimal information about the source.
+-- Alternatively, BibTeX entries can be directly specified with 'citeBib', when a DOI
+-- is not available.
+-- In both cases, a @.bib@ file will be generated automatically for use by the LaTeX process.
+
+-- The recommended way of using these in documents is to give each source a simple Haskell
+-- definition, like
+-- 
+-- @
+-- doe1950 = TeX.citeDOI "10.123/456" "J Doe et al 1950: Investigation of a Foo"
+-- @
+-- 
+-- which can then be cited like
+--
+-- @
+--    "It is known that Foos are silly "<>doe1950<>", so let's not talk about them anymore."
+-- @
+--
+-- or
+--
+-- @
+--    ... "according to "<>textc doe1950<>", who did not like Foo very much."
+-- @
+--
+-- See <https://github.com/Daniel-Diaz/HaTeX/blob/master/Examples/biblatexDOI.hs Examples/biblatexDOI>
+-- for a full document.
+
 -- | All-inclusive preparation of a document containing DOI references.
 --   Uses 'applyDOIReferenceResolves' under the hood.
-documentWithDOIReferences :: (MonadIO m, LaTeXC (m ()), SG.Semigroup (m ()), r ~ DOIReference)
-  => (r -> m (Maybe BibTeX.T)) -- ^ Reference-resolver function, for looking up BibTeX
+documentWithDOIReferences :: (MonadIO m, LaTeXC (m ()), SG.Semigroup (m ()))
+  => (DOIReference -> m (Maybe BibTeX.T))
+                               -- ^ Reference-resolver function, for looking up BibTeX
                                --   entries for a given DOI.
                                --   If the DOI cannot be looked up (@Nothing@), we just
                                --   include a footnote with a synopsis and the DOI in
                                --   literal form. (Mostly intended to ease offline editing.)
-  -> ReferenceQueryT r m ()    -- ^ The document content, possibly containing citations
+  -> ReferenceQueryT DOIOrBibReference m ()
+                               -- ^ The document content, possibly containing citations
                                --   in DOI-only form.
   -> m ()                      -- ^ LaTeX rendition. The content will already be wrapped
                                --   in @\\begin…end{document}@ here and an
@@ -89,40 +129,52 @@ documentWithDOIReferences resolver docW = do
 -- | More manual version of 'documentWithDOIReferences', only retrieving suitable
 --   BibTeX entries for the DOI-references contained in the document, but not
 --   generating any @.bib@ files or wrapping the content in it.
-applyDOIReferenceResolves :: (MonadIO m, LaTeXC (m ()), SG.Semigroup (m ()), r ~ DOIReference)
-  => (r -> m (Maybe BibTeX.T)) -- ^ Reference-resolver function.
-  -> ReferenceQueryT r m ()    -- ^ The document content.
-  -> m ( Map.Map DOIReference BibTeX.T
+applyDOIReferenceResolves :: (MonadIO m, LaTeXC (m ()), SG.Semigroup (m ()))
+  => (DOIReference -> m (Maybe BibTeX.T))    -- ^ Reference-resolver function.
+  -> ReferenceQueryT DOIOrBibReference m ()  -- ^ The document content.
+  -> m ( Map.Map String BibTeX.T
        , m ())                 -- ^ All the BibTeX entries found, and a version of the
                                --   document with all its doi-references changed to point to
                                --   the identifiers in that file.
 applyDOIReferenceResolves resolver (ReferenceQueryT refq) = do
     (allRefs, (), useRefs) <- refq
-    resolved <- fmap catMaybes . forM (allRefs[]) $ \r -> do
+    resolved <- fmap catMaybes . forM (allRefs[]) $ \case
+      (DOICase r) -> do
        r' <- resolver r
        return $ case r' of
-         Just entry -> Just (r, entry)
+         Just entry -> Just (_referenceDOI r, entry)
          Nothing -> Nothing
-    let refsMap = Map.fromList resolved
-    return (refsMap, useRefs $ \r flavour -> case Map.lookup r refsMap of
-        Just a -> let citeC = liftL $ \l -> (`TeXComm`[FixArg l]) $ case flavour of
-                        Flavour_cite      -> "cite" 
-                        Flavour_Cite      -> "Cite"
-                        Flavour_parencite -> "parencite"
-                        Flavour_Parencite -> "Parencite"
-                        Flavour_footcite  -> "footcite"
-                        Flavour_Footcite  -> "Footcite"
-                        Flavour_textcite  -> "textcite"
-                        Flavour_Textcite  -> "Textcite"
-                        Flavour_smartcite -> "smartcite"
-                        Flavour_Smartcite -> "Smartcite"
-                  in citeC . raw . fromString $ BibTeX.identifier a
-        Nothing -> makeshift r
+      (BibCase b@(BibTeX.Cons typ _ fields)) -> do
+         let unique = disambiguateBibLabel b
+         return $ Just (unique, BibTeX.Cons typ unique fields)
+    let refsMap = Map.fromListWith (error "Unhandled collision in Data.Hashable.hash.")
+                       resolved          -- TODO use a better disambiguation strategy.
+    return (refsMap, useRefs $ \r flavour -> case r of
+       DOICase dr -> case Map.lookup (_referenceDOI dr) refsMap of
+         Just a -> genCite flavour . raw . fromString $ BibTeX.identifier a
+         Nothing -> makeshift dr
+       BibCase b
+          -> genCite flavour . raw . fromString $ disambiguateBibLabel b
      )
  where makeshift :: (LaTeXC l, SG.Semigroup l) => DOIReference -> l
        makeshift (DOIReference doi synops) = footnote $
            fromLaTeX synops SG.<> ". DOI:" SG.<> fromString doi
+       genCite flavour = liftL $ \l -> (`TeXComm`[FixArg l]) $ case flavour of
+          Flavour_cite      -> "cite" 
+          Flavour_Cite      -> "Cite"
+          Flavour_parencite -> "parencite"
+          Flavour_Parencite -> "Parencite"
+          Flavour_footcite  -> "footcite"
+          Flavour_Footcite  -> "Footcite"
+          Flavour_textcite  -> "textcite"
+          Flavour_Textcite  -> "Textcite"
+          Flavour_smartcite -> "smartcite"
+          Flavour_Smartcite -> "Smartcite"
+       disambiguateBibLabel b = "bib"<>(showHex . hash $ BibTeX.entry b)""
     
+
+class SupportsDOIReferences r where
+  fromDOIReference :: DOIReference -> r
 
 type PlainDOI = String
 
@@ -134,6 +186,24 @@ instance Eq DOIReference where
   DOIReference doi₀ _ == DOIReference doi₁ _ = doi₀ == doi₁
 instance Ord DOIReference where
   compare (DOIReference doi₀ _) (DOIReference doi₁ _) = compare doi₀ doi₁
+instance SupportsDOIReferences DOIReference where
+  fromDOIReference = id
+
+
+class SupportsBibTeXReferences r where
+  fromBibtexEntry :: BibTeX.T -> r
+
+instance SupportsBibTeXReferences BibTeX.T where
+  fromBibtexEntry = id
+
+
+data DOIOrBibReference = DOICase DOIReference | BibCase BibTeX.T
+
+instance SupportsDOIReferences DOIOrBibReference where
+  fromDOIReference = DOICase
+instance SupportsBibTeXReferences DOIOrBibReference where
+  fromBibtexEntry = BibCase
+
 
 type DList r = [r] -> [r]
 
@@ -202,25 +272,36 @@ instance (Applicative m, LaTeXC (m a), SG.Semigroup (m a), a ~ ())
                                  , \resolve -> liftListL f $ ($ resolve)<$>rebuilds )
        ) <$> Tr.traverse runReferenceQueryT xs
 
-citeDOI :: (Functor m, Monoid (m ()), IsString (m ()))
+citeDOI :: (Functor m, Monoid (m ()), IsString (m ()), SupportsDOIReferences r)
         => PlainDOI  -- ^ The unambiguous document identifier.
         -> String    -- ^ Synopsis of the cited work, in the form
                      --   @"J Doe et al 1950: Investigation of a Foo"@;
                      --   this is strictly speaking optional, the synopsis will /not/
                      --   be included in the final document (provided the DOI
                      --   can be properly resolved).
-        -> ReferenceQueryT DOIReference m ()
+        -> ReferenceQueryT r m ()
 citeDOI doi synops = ReferenceQueryT $ (\a -> ( (r :), a, \f -> f r Flavour_cite ))
                        <$> mempty
- where r = DOIReference doi $ fromString synops
+ where r = fromDOIReference . DOIReference doi $ fromString synops
 
--- | Transform a citation into @\\textcite@, i.e. so that it can be used as a noun in a sentence.
-textc :: Functor m => ReferenceQueryT DOIReference m () -> ReferenceQueryT DOIReference m ()
+citeBib :: (Functor m, Monoid (m ()), IsString (m ()), SupportsBibTeXReferences r)
+        => BibTeX.T  -- ^ Full BibTeX entry, as would normally be part of a @.bib@ file.
+        -> ReferenceQueryT r m ()
+citeBib e = ReferenceQueryT $ (\a -> ( (r :), a, \f -> f r Flavour_cite ))
+                       <$> mempty
+ where r = fromBibtexEntry e
+
+-- | Change citations generated with 'citeDOI' or 'citeBib' from the default
+--   @\\cite@ to @\\textcite@, i.e. so as to be used as a noun in a sentence.
+--   (In typical BibLaTeX styles, this means the citation appears in a form like
+--   “Dow et al. 1950” instead of merely e.g. “[Do50]”.)
+textc :: Functor m => ReferenceQueryT r m () -> ReferenceQueryT r m ()
 textc (ReferenceQueryT y) = ReferenceQueryT
         $ (\(r,m,a) -> (r, m, \f -> a (\x _ -> f x Flavour_textcite))) <$> y
 
--- | Transform a citation into @\\Textcite@, i.e. so that it can be used as the first word in a sentence.
-textC :: Functor m => ReferenceQueryT DOIReference m () -> ReferenceQueryT DOIReference m ()
+-- | Like 'textc' but transform a citation into @\\Textcite@, i.e. so that it can
+--   be used as the first word in a sentence.
+textC :: Functor m => ReferenceQueryT r m () -> ReferenceQueryT r m ()
 textC (ReferenceQueryT y) = ReferenceQueryT
         $ (\(r,m,a) -> (r, m, \f -> a (\x _ -> f x Flavour_Textcite))) <$> y
 
