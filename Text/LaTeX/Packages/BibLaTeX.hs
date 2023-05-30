@@ -13,6 +13,7 @@ module Text.LaTeX.Packages.BibLaTeX
  , cite
  , printbibliography
  -- * Automatic bibliography retrieval
+ -- $autoBibRetr
  -- ** Citing
  , citeDOI
  , citeBib
@@ -68,6 +69,42 @@ addbibresource fp = fromLaTeX $ TeXComm "addbibresource" [FixArg $ TeXRaw $ from
 printbibliography :: LaTeXC l => l
 printbibliography = comm0 "printbibliography"
 
+
+-- $autoBibRetr
+-- The following are convenience tools, for using Haskell as a lightweight reference
+-- management system in addition to just wrapping LaTeX syntax. The idea is
+-- to generate simultaneously LaTeX source containing references, and gather the actual
+-- citation information these are referring to.
+--
+-- The main intended use is with references that have a DOI available: a DOI is already 
+-- sufficient to unambiguously point to a source. Keeping unwieldy BibTeX files is 
+-- therefore unnecessary and redundant; use instead 'citeDOI', which only requires
+-- minimal information about the source.
+-- Alternatively, BibTeX entries can be directly specified with 'citeBib', when a DOI
+-- is not available.
+-- In both cases, a @.bib@ file will be generated automatically for use by the LaTeX process.
+
+-- The recommended way of using these in documents is to give each source a simple Haskell
+-- definition, like
+-- 
+-- @
+-- doe1950 = TeX.citeDOI "10.123/456" "J Doe et al 1950: Investigation of a Foo"
+-- @
+-- 
+-- which can then be cited like
+--
+-- @
+--    "It is known that Foos are silly "<>doe1950<>", so let's not talk about them anymore."
+-- @
+--
+-- or
+--
+-- @
+--    ... "according to "<>textc doe1950<>", who did not like Foo very much."
+-- @
+--
+-- See <https://github.com/Daniel-Diaz/HaTeX/blob/master/Examples/biblatexDOI.hs Examples/biblatexDOI>
+-- for a full document.
 
 -- | All-inclusive preparation of a document containing DOI references.
 --   Uses 'applyDOIReferenceResolves' under the hood.
