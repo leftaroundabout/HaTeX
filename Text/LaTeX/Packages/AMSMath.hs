@@ -54,6 +54,8 @@ module Text.LaTeX.Packages.AMSMath
  , tsum , sumFromTo
  , prod , prodFromTo
  , coprod, coprodFromTo
+ , bigoplus, bigoplusFromTo 
+ , bigotimes, bigotimesFromTo 
  , integral , integralFromTo
  , partial, totald, partialOf, totaldOf
  , bigcup, bigcupFromTo

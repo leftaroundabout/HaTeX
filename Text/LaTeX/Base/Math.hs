@@ -54,6 +54,8 @@ module Text.LaTeX.Base.Math
  , partial, totald, partialOf, totaldOf
  , bigcup, bigcupFromTo
  , bigcap, bigcapFromTo 
+ , bigoplus, bigoplusFromTo
+ , bigotimes, bigotimesFromTo
    -- ** Operator symbols
    -- *** Arithmetic
  , (+-), (-+)
@@ -477,6 +479,30 @@ bigcapFromTo :: LaTeXC l
            -> l -- ^ Expression above.
            -> l
 bigcapFromTo x y = commS "bigcap" <> raw"_" <> braces x <> raw"^" <> braces y
+
+-- | Big direct-sum symbol \(\bigoplus\). Use 'bigoplusFromTo' if you want to specify the
+--   limits of the union.
+bigoplus :: LaTeXC l => l
+bigoplus = comm0 "bigoplus"
+
+-- | Big direct sum symbol with limits, like \[\bigoplus_0^n\].
+bigoplusFromTo :: LaTeXC l
+           => l -- ^ Expression below.
+           -> l -- ^ Expression above.
+           -> l
+bigoplusFromTo x y = commS "bigoplus" <> raw"_" <> braces x <> raw"^" <> braces y
+
+-- | Big tensor-product symbol \(\bigotimes\). Use 'bigotimesFromTo' if you want to specify the
+--   limits of the union.
+bigotimes :: LaTeXC l => l
+bigotimes = comm0 "bigotimes"
+
+-- | Big tensor product symbol with limits, like \[\bigotimes_0^n\].
+bigotimesFromTo :: LaTeXC l
+           => l -- ^ Expression below.
+           -> l -- ^ Expression above.
+           -> l
+bigotimesFromTo x y = commS "bigotimes" <> raw"_" <> braces x <> raw"^" <> braces y
 
 
 -- | Integral symbol. Use 'integralFromTo' if you want to specify
