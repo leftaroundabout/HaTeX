@@ -49,10 +49,10 @@ checkFromFunction :: (LaTeX -> [Warning]) -> TeXCheck
 checkFromFunction = TC
 
 instance SG.Semigroup TeXCheck where
- (<>) = mappend
+ TC tc1 <> TC tc2 = TC $ uncurry (<>) . (tc1 &&& tc2)
+
 instance Monoid TeXCheck where
  mempty = TC $ const []
- mappend (TC tc1) (TC tc2) = TC $ uncurry mappend . (tc1 &&& tc2)
 
 -- | Check with 'checkLabels', 'checkClass' and 'checkDoc'.
 checkAll :: TeXCheck

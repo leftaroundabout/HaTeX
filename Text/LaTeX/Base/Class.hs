@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
 -- | Definition of the 'LaTeXC' class, used to combine the classic applicative and
 --   the latter monadic interfaces of /HaTeX 3/. The user can define new instances

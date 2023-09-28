@@ -1165,11 +1165,11 @@ hatex3 = hatex <> emph (textbf "3")
 -- | Print the HaTeX logo, beside the complete version number.
 hatex_version :: LaTeXC l => l
 hatex_version = hatex
-             <> emph (textbf $ rendertex x)
+             <> emph (textbf $ rendertex $ head v)
              <> hspace (Ex $ negate 0.3)
-             <> emph ("." <> fromString (intercalate "." $ fmap show xs))
+             <> emph ("." <> fromString (intercalate "." $ fmap show $ tail v))
  where
-  (x:xs) = versionBranch version
+  v = versionBranch version
 
 caption :: LaTeXC l => l -> l
 caption = liftL $ \l -> TeXComm "caption" [FixArg l]

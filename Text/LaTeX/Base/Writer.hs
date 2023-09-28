@@ -54,7 +54,6 @@ module Text.LaTeX.Base.Writer
    ) where
 
 -- base
-import Control.Monad (liftM, liftM2)
 import Control.Arrow
 import Data.String
 #if !MIN_VERSION_base(4,8,0)
@@ -107,7 +106,6 @@ instance MonadTrans LaTeXT where
  lift = LaTeXT . lift
 
 instance Monad m => Monad (LaTeXT m) where
- return = LaTeXT . return
  (LaTeXT c) >>= f = LaTeXT $ do 
   a <- c
   let LaTeXT c' = f a
@@ -136,12 +134,12 @@ runLaTeXT = runWriterT . unwrapLaTeXT
 -- > myLaTeX = execLaTeXT anExample
 --
 execLaTeXT :: Monad m => LaTeXT m a -> m LaTeX
-execLaTeXT = liftM snd . runLaTeXT
+execLaTeXT = fmap snd . runLaTeXT
 
 -- | Version of 'execLaTeXT' with possible warning messages.
 --   This function applies 'checkAll' to the 'LaTeX' output.
 execLaTeXTWarn :: Monad m => LaTeXT m a -> m (LaTeX,[Warning])
-execLaTeXTWarn = liftM (id &&& check checkAll) . execLaTeXT
+execLaTeXTWarn = fmap (id &&& check checkAll) . execLaTeXT
 
 -- | This function run a 'LaTeXT' computation,
 --   lifting the result again in the monad.
@@ -158,7 +156,7 @@ extractLaTeX = LaTeXT . lift . runWriterT . unwrapLaTeXT
 -- is to implement the 'LaTeXC' instance of 'LaTeXT', which
 -- is closely related.
 extractLaTeX_ :: Monad m => LaTeXT m a -> LaTeXT m LaTeX
-extractLaTeX_ = liftM snd . extractLaTeX
+extractLaTeX_ = fmap snd . extractLaTeX
 
 -- | With 'textell' you can append 'LaTeX' values to the
 --   state of the 'LaTeXT' monad.
@@ -216,7 +214,6 @@ instance (Monad m, a ~ ()) => IsString (LaTeXT m a) where
 
 instance (Monad m, Monoid a) => Monoid (LaTeXT m a) where
  mempty = return mempty
- mappend = liftM2 mappend
 
 instance (Applicative m, Semigroup.Semigroup a) => Semigroup.Semigroup (LaTeXT m a) where
   (<>) = liftA2 (Semigroup.<>)

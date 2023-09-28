@@ -99,18 +99,16 @@ data TeXArg =
 
 -- Monoid instance for 'LaTeX'.
 
--- | Method 'mappend' is strict in both arguments (except in the case when the first argument is 'TeXEmpty').
 instance Monoid LaTeX where
- mempty = TeXEmpty
- mappend TeXEmpty x = x
- mappend x TeXEmpty = x
- -- This equation is to make 'mappend' associative.
- mappend (TeXSeq x y) z = TeXSeq x $ mappend y z
- --
- mappend x y = TeXSeq x y
+  mempty = TeXEmpty
 
+-- | Appending is strict in both arguments (except when the first argument is 'TeXEmpty').
 instance Semigroup.Semigroup LaTeX where
-  (<>) = mappend
+  TeXEmpty <> x = x
+  x <> TeXEmpty = x
+  -- This equation is to make 'mappend' associative.
+  TeXSeq x y <> z = TeXSeq x $ y <> z
+  x <> y = TeXSeq x y
 
 -- | Calling 'between' @c l1 l2@ puts @c@ between @l1@ and @l2@ and
 --   appends them.

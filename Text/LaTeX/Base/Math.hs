@@ -1,6 +1,6 @@
-
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE CPP               #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 -- | This module contains the maths-specific part of "Text.LaTeX.Base.Commands",
 --  i.e. of the commands that are available in LaTeX out of the box without
