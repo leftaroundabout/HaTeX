@@ -3,41 +3,10 @@
 
 HaTeX is a Haskell library that implements the *LaTeX syntax*, plus some abstractions on top.
 
-Check a list of usage examples in the [Examples](https://github.com/Daniel-Diaz/HaTeX/tree/master/Examples) directory
+Check a list of usage examples in the [Examples](https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/tree/main/Examples) directory
 of the repository in GitHub.
-A good starting point is [simple.hs](https://github.com/Daniel-Diaz/HaTeX/blob/master/Examples/simple.hs).
+A good starting point is [simple.hs](https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/blob/main/Examples/simple.hs?ref_type=heads).
 Run any example script executing the ``main`` function.
-
-## Installation notes
-
-To install `HaTeX`, use [cabal-install](http://hackage.haskell.org/package/cabal-install)
-or [stack](http://docs.haskellstack.org/en/stable/README).
-
-To install with cabal, run:
-
-    $ cabal update
-    $ cabal install HaTeX
-
-This will download and install the latest official release (recommended).
-If you want to try a newer version, use _git_ to clone the code contained
-in this repository.
-
-    $ git clone https://github.com/Daniel-Diaz/HaTeX.git
-    $ cd HaTeX
-    $ cabal install
-
-However, this is not recommended as it may include some bugs or oddities due to in-development features.
-Note that this package follows the [_Package Versioning Policy_](http://www.haskell.org/haskellwiki/Package_versioning_policy),
-so it is unlikely to suffer from API breakages if you follow it too when importing the library (assuming
-you are using the version in Hackage).
-
-## Current HaTeX versions
-
-[![HaTeX on Hackage](https://img.shields.io/hackage/v/HaTeX.svg)](https://hackage.haskell.org/package/HaTeX)
-
-[![HaTeX on Stackage](http://stackage.org/package/HaTeX/badge/lts)](http://stackage.org/lts/package/HaTeX)
-
-[![HaTeX on Stackage Nightly](http://stackage.org/package/HaTeX/badge/nightly)](http://stackage.org/nightly/package/HaTeX)
 
 ## HaTeX User's Guide
 
@@ -55,15 +24,9 @@ Please note that the user's guide needs to be updated (contributions are more th
 
 There are many ways to get involved in the HaTeX project. Use the most comfortable way for you.
 
-* Fork the [GitHub repository](https://github.com/Daniel-Diaz/HaTeX) and make your own contributions.
-* Report bugs or make suggestions opening a ticket in the [Issue Tracker](https://github.com/Daniel-Diaz/HaTeX/issues).
+* Fork the [GitLab repository](https://gitlab.com/daniel-casanueva/haskell/HaTeX) and make your own contributions.
+* Report bugs or make suggestions opening a ticket in the [Issue Tracker](https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/issues).
 * Help us to improve and extend our [hatex-guide](https://github.com/Daniel-Diaz/hatex-guide).
-
-## TODO list
-
-* Add more examples.
-* Add more documentation.
-* BibTeX support.
 
 ## Related projects
 

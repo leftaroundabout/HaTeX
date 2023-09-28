@@ -1,13 +1,13 @@
 Name: HaTeX
 Version: 3.22.3.2
-Author: Daniel Casanueva
 Category: LaTeX
 Build-type: Simple
 License: BSD3
 License-file: license
-Maintainer: Daniel Casanueva
-Bug-reports: https://github.com/Daniel-Diaz/HaTeX/issues
-homepage: https://github.com/Daniel-Diaz/HaTeX/blob/master/README.md
+Author: Daniel Casanueva (daniel.casanueva `at` proton.me)
+Maintainer: Daniel Casanueva (daniel.casanueva `at` proton.me)
+homepage: https://gitlab.com/daniel-casanueva/haskell/HaTeX
+Bug-reports: https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/issues
 Synopsis: The Haskell LaTeX library.
 Description: This library implements the LaTeX syntax and provides some useful abstractions.
              .
