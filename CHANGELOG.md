@@ -9,6 +9,14 @@ https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/commits/main
 
 # Changelog by versions
 
+## 3.22.4.0
+* Define `(<>)` instead of `mappend`.
+* Use `fmap` instead of `liftM`.
+* New function: `applyDOIReferenceResolves`.
+* Make parser test more lenient (it was commented due to issue #144).
+* Metadata update.
+* Unify files `ReleaseNotes` and `CHANGELOG.md`.
+
 ## From 3.22.3.1 to 3.22.3.2
 * Relax transformers dependency upper bound from `< 0.6` to `< 0.7`.
 
