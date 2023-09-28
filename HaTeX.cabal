@@ -30,8 +30,8 @@ Description: This library implements the LaTeX syntax and provides some useful a
              .
              If you prefer to write in LaTeX and all you want is to /program/ some parts of the document,
              or if you already have the LaTeX document written and you just want to add some automatically
-             generated LaTeX code somewhere, check haskintex: <http://daniel-diaz.github.io/projects/haskintex>.
-             It allows you to embed Haskell in LaTeX. It also makes you easy to use HaTeX within a LaTeX document.
+             generated LaTeX code somewhere, check haskintex: <https://daniel-casanueva.gitlab.io/haskell/haskintex>.
+             It allows you to embed Haskell in LaTeX. It also makes it easy to use HaTeX within a LaTeX document.
 Cabal-version: 1.18
 Extra-source-files:
   -- Examples
@@ -48,10 +48,6 @@ Extra-doc-files:
   docfiles/beamers/*.png
   -- Others
   docfiles/others/*.png
-
-Source-repository head
-  type: git
-  location: git://github.com/Daniel-Diaz/HaTeX.git
 
 Library
   Default-language: Haskell2010

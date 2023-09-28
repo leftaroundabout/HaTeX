@@ -30,7 +30,7 @@ There are many ways to get involved in the HaTeX project. Use the most comfortab
 
 ## Related projects
 
-* [haskintex](http://daniel-diaz.github.io/projects/haskintex): Tool to use Haskell (and, additionaly, the HaTeX library)
+* [haskintex](https://daniel-casanueva.gitlab.io/haskell/haskintex): Tool to use Haskell (and, additionaly, the HaTeX library)
 within a LaTeX file.
 * [TeX-my-math](https://github.com/leftaroundabout/Symbolic-math-HaTeX): Experimental library to ease the production
 of mathematical expressions using HaTeX.
