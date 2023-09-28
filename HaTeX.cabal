@@ -34,15 +34,14 @@ Description: This library implements the LaTeX syntax and provides some useful a
              It allows you to embed Haskell in LaTeX. It also makes you easy to use HaTeX within a LaTeX document.
 Cabal-version: 1.18
 Extra-source-files:
-  ReleaseNotes
-  README.md
-  CHANGELOG.md
   -- Examples
   Examples/*.hs
   -- Tests
   parsertest/*.tex
   parsertest/parsertest.hs
 Extra-doc-files:
+  README.md
+  CHANGELOG.md
   -- TikZ
   docfiles/tikz/*.png
   -- Beamer
@@ -122,7 +121,7 @@ Library
           Text.LaTeX.Packages.TikZ.Simple
           Text.LaTeX.Packages.TikZ.Syntax
   Other-modules: Paths_HaTeX
-  Default-extensions: OverloadedStrings, TypeFamilies
+  Default-extensions: OverloadedStrings, TypeFamilies, TypeOperators
   Other-extensions: CPP
   ghc-options: -Wall -fno-warn-orphans
 
