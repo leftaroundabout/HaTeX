@@ -1,6 +1,5 @@
 include:
-  - project: 'daniel-casanueva/haskell-common'
-    file: '/ci.yml'
+  - remote: 'https://daniel-casanueva.gitlab.io/haskell-common/ci.yml'
 
 # Set of stackage snapshots to build against
 build:
