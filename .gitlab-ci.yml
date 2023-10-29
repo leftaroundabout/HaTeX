@@ -1,14 +1,2 @@
 include:
   - remote: 'https://daniel-casanueva.gitlab.io/haskell-common/ci.yml'
-
-# Set of stackage snapshots to build against
-build:
-  parallel:
-    matrix:
-      - snapshot:
-        - lts-17
-        - lts-18
-        - lts-19
-        - lts-20
-        - lts-21
-        - nightly
