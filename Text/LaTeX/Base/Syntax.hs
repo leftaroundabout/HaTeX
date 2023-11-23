@@ -306,7 +306,7 @@ arbitraryLaTeX inDollar = do
   -- not getting too large.
   n <- choose (0,16 :: Int)
   case n of
-    0 -> if inDollar then arbitraryLaTeX True else pure TeXEmpty
+    0 -> if inDollar then arbitraryLaTeX inDollar else pure TeXEmpty
     1 -> do m <- choose (0,5)
             TeXComm <$> arbitraryName <*> vectorOf m arbitrary
     2 -> TeXCommS <$> arbitraryName
@@ -317,10 +317,10 @@ arbitraryLaTeX inDollar = do
             else do m <- choose (0,3)
                     let t = [Parentheses,Square,Dollar,DoubleDollar] !! m
                     TeXMath <$> pure t <*> arbitraryLaTeX (t == Dollar || t == DoubleDollar)
-    5 -> TeXLineBreak <$> arbitrary <*> arbitrary
-    6 -> TeXBraces <$> arbitrary
+    5 -> TeXLineBreak <$> arbitraryLaTeX inDollar <*> arbitraryLaTeX inDollar
+    6 -> TeXBraces <$> arbitraryLaTeX inDollar
     7 -> TeXComment <$> arbitraryRaw
-    8 -> TeXSeq <$> (if inDollar then arbitraryLaTeX True else arbitrary) <*> arbitrary
+    8 -> TeXSeq <$> arbitraryLaTeX inDollar <*> arbitraryLaTeX inDollar
     _ -> TeXRaw <$> arbitraryRaw
 
 instance Arbitrary TeXArg where

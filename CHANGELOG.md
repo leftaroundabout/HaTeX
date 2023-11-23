@@ -9,6 +9,9 @@ https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/commits/main
 
 # Changelog by versions
 
+## 3.22.4.1
+* QuickCheck instance fix.
+
 ## 3.22.4.0
 * Define `(<>)` instead of `mappend`.
 * Use `fmap` instead of `liftM`.
