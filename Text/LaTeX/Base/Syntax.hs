@@ -317,7 +317,7 @@ arbitraryLaTeX inDollar = do
             else do m <- choose (0,3)
                     let t = [Parentheses,Square,Dollar,DoubleDollar] !! m
                     TeXMath <$> pure t <*> arbitraryLaTeX (t == Dollar || t == DoubleDollar)
-    5 -> TeXLineBreak <$> arbitraryLaTeX inDollar <*> arbitraryLaTeX inDollar
+    5 -> TeXLineBreak <$> arbitrary <*> arbitrary
     6 -> TeXBraces <$> arbitraryLaTeX inDollar
     7 -> TeXComment <$> arbitraryRaw
     8 -> TeXSeq <$> arbitraryLaTeX inDollar <*> arbitraryLaTeX inDollar
