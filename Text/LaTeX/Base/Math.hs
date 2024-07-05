@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE CPP               #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 -- | This module contains the maths-specific part of "Text.LaTeX.Base.Commands",
@@ -145,7 +144,6 @@ import Text.LaTeX.Base.Syntax
 import Text.LaTeX.Base.Class
 import Text.LaTeX.Base.Writer
 import Text.LaTeX.Base.Render
-
 
 -- | Inline mathematical expressions.
 math :: LaTeXC l => l -> l
