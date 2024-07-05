@@ -1,5 +1,5 @@
 name: HaTeX
-version: 3.22.4.1
+version: 3.22.4.2
 category: LaTeX
 build-type: Simple
 license: BSD3
@@ -55,7 +55,7 @@ library
                , text >= 0.11.2.3 && < 2.2
                , transformers >= 0.2.2 && < 0.7
                , containers >= 0.4.2.1 && < 0.7
-               , hashable >= 1.2 && < 1.5
+               , hashable >= 1.2 && < 1.6
                , bibtex >= 0.1 && < 0.2
                , matrix
                  -- Testing
