@@ -41,7 +41,6 @@ import Numeric (showHex)
 
 import qualified Data.List as List
 
-import Control.Applicative
 import Control.Monad (forM)
 import Control.Monad.IO.Class
 
