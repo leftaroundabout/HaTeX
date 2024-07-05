@@ -1,5 +1,5 @@
 
-{-# LANGUAGE CPP, DeriveDataTypeable, DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable, DeriveGeneric #-}
 
 -- | LaTeX syntax description in the definition of the 'LaTeX' datatype.
 --   If you want to add new commands or environments not defined in
@@ -30,7 +30,6 @@ import Data.Text (Text,pack)
 import qualified Data.Text
 import qualified Data.Semigroup as Semigroup
 import Data.String
-import Control.Applicative
 import Control.Monad (replicateM)
 import Data.Functor.Identity (runIdentity)
 import Data.Data (Data)
@@ -38,9 +37,7 @@ import Data.Typeable
 import Test.QuickCheck
 import Data.Hashable
 import GHC.Generics (Generic)
-#if !MIN_VERSION_base(4,11,0)
-import Data.Monoid
-#endif
+import Control.Applicative (liftA2)
 
 -- | Measure units defined in LaTeX. Use 'CustomMeasure' to use commands like 'textwidth'.
 --   For instance:

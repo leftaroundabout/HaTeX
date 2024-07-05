@@ -5,6 +5,8 @@ module Text.LaTeX.Packages.Trees (
    Tree (..)
  ) where
 
+import Control.Applicative (liftA2)
+
 -- | Tree datatype.
 data Tree a =
    Leaf a -- ^ Leafs are non-empty.
