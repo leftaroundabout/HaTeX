@@ -200,20 +200,6 @@ instance Floating LaTeX where
 
 ----------- LaTeXT instances
 
-#if !MIN_VERSION_base(4,5,0)
-
--- | Warning: this instance only exists for the 'Num' instance.
---   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
-instance Eq (LaTeXT m a) where
- _ == _ = error "Cannot use \"(==)\" Eq method with a LaTeXT value."
-
--- | Warning: this instance only exists for the 'Num' instance.
---   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
-instance Show (LaTeXT m a) where
- show _ = error "Cannot use \"show\" Show method with a LaTeXT value."
-
-#endif
-
 -- | Careful! Method 'signum' is undefined. Don't use it!
 --   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
 instance (Monad m, a ~ ()) => Num (LaTeXT m a) where

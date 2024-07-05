@@ -40,9 +40,6 @@ module Text.LaTeX.Packages.TikZ.PathBuilder (
 import Text.LaTeX.Base.Syntax (LaTeX)
 import Text.LaTeX.Packages.TikZ.Syntax
 import Control.Monad.Trans.State
-#if !MIN_VERSION_base(4,8,0)
-import Control.Applicative
-#endif
 
 newtype PathState = PS { currentPath :: TPath }
 

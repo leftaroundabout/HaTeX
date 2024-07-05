@@ -55,6 +55,7 @@ module Text.LaTeX.Base.Writer
 
 -- base
 import Control.Arrow
+import Control.Applicative (liftA2)
 import Data.String
 import qualified Data.Semigroup as Semigroup
 -- transformers
