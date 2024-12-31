@@ -29,7 +29,7 @@ import Data.List (intersperse)
 import qualified Data.ByteString as B
 import Data.Word (Word8)
 import Numeric (showFFloat)
-import Data.Text (Text,lines,unlines)
+import Data.Text (Text,lines,unlines,dropWhileEnd)
 import Data.Text.Encoding
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder)
@@ -190,11 +190,10 @@ instance Render Integer where
 
 instance Render Float where
   renderBuilder = Builder.formatRealFloat Builder.Fixed (Just 5)
-  render = renderDefault
-
+  render = dropWhileEnd (== '.') . dropWhileEnd (== '0') . renderDefault
 instance Render Double where
   renderBuilder = Builder.formatRealFloat Builder.Fixed (Just 5)
-  render = renderDefault
+  render = dropWhileEnd (== '.') . dropWhileEnd (== '0') . renderDefault
 
 instance Render Word8 where
   renderBuilder = Builder.decimal
