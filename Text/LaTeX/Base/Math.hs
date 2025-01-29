@@ -125,7 +125,7 @@ module Text.LaTeX.Base.Math
    -- ** Other symbols
  , pm , mp
  , implies
- , forall , exists
+ , forall_ , exists
  , dagger, ddagger
  , infty
  , imath, jmath
@@ -923,8 +923,8 @@ implies :: LaTeXC l => l
 implies = comm0 "implies"
 
 -- | /For all/ symbol, \(\forall\).
-forall :: LaTeXC l => l
-forall = comm0 "forall"
+forall_ :: LaTeXC l => l
+forall_ = comm0 "forall"
 
 -- | /Exists/ symbol, \(\exists\).
 exists :: LaTeXC l => l
