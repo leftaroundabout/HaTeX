@@ -116,7 +116,7 @@ module Text.LaTeX.Packages.AMSMath
    -- ** Other symbols
  , pm , mp
  , to , mapsto, implies
- , forall , exists
+ , forall_ , exists
  , dagger, ddagger
  , infty
  , imath, jmath
