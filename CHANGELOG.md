@@ -9,6 +9,12 @@ https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/commits/main
 
 # Changelog by versions
 
+## 3.23.0.0
+* Rename `forall` as `forall_` (Patrick Ritzenfeld).
+* Drop trailing zeros and decimal point from rendered Floats and Doubles (David Fox).
+* Fix line break command formatting (David Fox).
+* Fix typo in `twoheadrightarrow` (Daniel Casanueva).
+
 ## 3.22.4.2
 * Drop support for `base < 4.14`.
 * Support `hashable-1.5.0.0`.
