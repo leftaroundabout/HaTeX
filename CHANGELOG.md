@@ -5,9 +5,13 @@ This is the logchange of HaTeX. It is not exhaustive.
 For a full list of changes, see the commit history of the
 git repository:
 
-https://gitlab.com/daniel-casanueva/haskell/HaTeX/-/commits/main
+https://codeberg.org/daniel-casanueva/HaTeX/commits/branch/main
 
 # Changelog by versions
+
+## 3.23.0.1
+* Metadata update.
+* Drop gitlab CI.
 
 ## 3.23.0.0
 * Rename `forall` as `forall_` (Patrick Ritzenfeld).
