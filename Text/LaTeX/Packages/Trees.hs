@@ -1,18 +1,11 @@
 
-{-# LANGUAGE CPP #-}
-
 -- | Tree definition with some class instances.
 module Text.LaTeX.Packages.Trees (
    -- * Tree
    Tree (..)
  ) where
 
-#if !MIN_VERSION_base(4,8,0)
-import Data.Monoid
-import Data.Foldable
-import Data.Traversable
-#endif
-import Control.Applicative
+import Control.Applicative (liftA2)
 
 -- | Tree datatype.
 data Tree a =

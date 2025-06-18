@@ -1,5 +1,5 @@
 
-{-# LANGUAGE CPP, DeriveDataTypeable, DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable, DeriveGeneric #-}
 
 -- | LaTeX syntax description in the definition of the 'LaTeX' datatype.
 --   If you want to add new commands or environments not defined in
@@ -30,7 +30,6 @@ import Data.Text (Text,pack)
 import qualified Data.Text
 import qualified Data.Semigroup as Semigroup
 import Data.String
-import Control.Applicative
 import Control.Monad (replicateM)
 import Data.Functor.Identity (runIdentity)
 import Data.Data (Data)
@@ -38,9 +37,7 @@ import Data.Typeable
 import Test.QuickCheck
 import Data.Hashable
 import GHC.Generics (Generic)
-#if !MIN_VERSION_base(4,11,0)
-import Data.Monoid
-#endif
+import Control.Applicative (liftA2)
 
 -- | Measure units defined in LaTeX. Use 'CustomMeasure' to use commands like 'textwidth'.
 --   For instance:
@@ -99,18 +96,16 @@ data TeXArg =
 
 -- Monoid instance for 'LaTeX'.
 
--- | Method 'mappend' is strict in both arguments (except in the case when the first argument is 'TeXEmpty').
 instance Monoid LaTeX where
- mempty = TeXEmpty
- mappend TeXEmpty x = x
- mappend x TeXEmpty = x
- -- This equation is to make 'mappend' associative.
- mappend (TeXSeq x y) z = TeXSeq x $ mappend y z
- --
- mappend x y = TeXSeq x y
+  mempty = TeXEmpty
 
+-- | Appending is strict in both arguments (except when the first argument is 'TeXEmpty').
 instance Semigroup.Semigroup LaTeX where
-  (<>) = mappend
+  TeXEmpty <> x = x
+  x <> TeXEmpty = x
+  -- This equation is to make 'mappend' associative.
+  TeXSeq x y <> z = TeXSeq x $ y <> z
+  x <> y = TeXSeq x y
 
 -- | Calling 'between' @c l1 l2@ puts @c@ between @l1@ and @l2@ and
 --   appends them.
@@ -275,7 +270,7 @@ arbitraryChar :: Gen Char
 arbitraryChar = elements $
      ['A'..'Z']
   ++ ['a'..'z']
-  ++ "\n-+*/!\"().,:;'@<>? "
+  ++ "\n-+*/!\".,:;'@? "
 
 -- | Utility for the instance of 'LaTeX' to 'Arbitrary'.
 --   We generate a short sequence of characters and
@@ -308,7 +303,7 @@ arbitraryLaTeX inDollar = do
   -- not getting too large.
   n <- choose (0,16 :: Int)
   case n of
-    0 -> if inDollar then arbitraryLaTeX True else pure TeXEmpty
+    0 -> if inDollar then arbitraryLaTeX inDollar else pure TeXEmpty
     1 -> do m <- choose (0,5)
             TeXComm <$> arbitraryName <*> vectorOf m arbitrary
     2 -> TeXCommS <$> arbitraryName
@@ -320,9 +315,9 @@ arbitraryLaTeX inDollar = do
                     let t = [Parentheses,Square,Dollar,DoubleDollar] !! m
                     TeXMath <$> pure t <*> arbitraryLaTeX (t == Dollar || t == DoubleDollar)
     5 -> TeXLineBreak <$> arbitrary <*> arbitrary
-    6 -> TeXBraces <$> arbitrary
+    6 -> TeXBraces <$> arbitraryLaTeX inDollar
     7 -> TeXComment <$> arbitraryRaw
-    8 -> TeXSeq <$> (if inDollar then arbitraryLaTeX True else arbitrary) <*> arbitrary
+    8 -> TeXSeq <$> arbitraryLaTeX inDollar <*> arbitraryLaTeX inDollar
     _ -> TeXRaw <$> arbitraryRaw
 
 instance Arbitrary TeXArg where

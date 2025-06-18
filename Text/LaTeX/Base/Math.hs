@@ -1,6 +1,5 @@
-
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE CPP               #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 -- | This module contains the maths-specific part of "Text.LaTeX.Base.Commands",
 --  i.e. of the commands that are available in LaTeX out of the box without
@@ -128,7 +127,7 @@ module Text.LaTeX.Base.Math
    -- ** Other symbols
  , pm , mp
  , implies
- , forall , exists
+ , forall_ , exists
  , dagger, ddagger
  , infty
  , imath, jmath
@@ -147,7 +146,6 @@ import Text.LaTeX.Base.Syntax
 import Text.LaTeX.Base.Class
 import Text.LaTeX.Base.Writer
 import Text.LaTeX.Base.Render
-
 
 -- | Inline mathematical expressions.
 math :: LaTeXC l => l -> l
@@ -203,20 +201,6 @@ instance Floating LaTeX where
  acosh = (operatorname "arcosh" <>)
 
 ----------- LaTeXT instances
-
-#if !MIN_VERSION_base(4,5,0)
-
--- | Warning: this instance only exists for the 'Num' instance.
---   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
-instance Eq (LaTeXT m a) where
- _ == _ = error "Cannot use \"(==)\" Eq method with a LaTeXT value."
-
--- | Warning: this instance only exists for the 'Num' instance.
---   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
-instance Show (LaTeXT m a) where
- show _ = error "Cannot use \"show\" Show method with a LaTeXT value."
-
-#endif
 
 -- | Careful! Method 'signum' is undefined. Don't use it!
 --   This instance is defined in the "Text.LaTeX.Packages.AMSMath" module.
@@ -965,8 +949,8 @@ implies :: LaTeXC l => l
 implies = comm0 "implies"
 
 -- | /For all/ symbol, \(\forall\).
-forall :: LaTeXC l => l
-forall = comm0 "forall"
+forall_ :: LaTeXC l => l
+forall_ = comm0 "forall"
 
 -- | /Exists/ symbol, \(\exists\).
 exists :: LaTeXC l => l

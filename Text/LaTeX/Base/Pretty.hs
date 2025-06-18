@@ -13,7 +13,7 @@ module Text.LaTeX.Base.Pretty (
 
 import Text.LaTeX.Base.Syntax
 import Text.LaTeX.Base.Render
-import Data.Text.Prettyprint.Doc
+import Prettyprinter
   ( Doc, pretty
   , backslash, line, softline, hardline
   , braces, brackets
@@ -23,7 +23,7 @@ import Data.Text.Prettyprint.Doc
   , PageWidth (..)
   , layoutSmart
     )
-import Data.Text.Prettyprint.Doc.Render.String (renderString)
+import Prettyprinter.Render.String (renderString)
 import Data.Text (unpack,lines)
 #if !MIN_VERSION_base(4,8,0)
 import Data.Monoid (mconcat,mempty)

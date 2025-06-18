@@ -106,7 +106,7 @@ twoheadleftarrow = comm0 "twoheadleftarrow"
 
 -- | \(\twoheadrightarrow\) symbol - double head right arrow
 twoheadrightarrow :: LaTeXC l => l
-twoheadrightarrow = comm0 "twoheadleftarrow"
+twoheadrightarrow = comm0 "twoheadrightarrow"
 
 -- | \(\checkmark\) symbol.
 checkmark :: LaTeXC l => l

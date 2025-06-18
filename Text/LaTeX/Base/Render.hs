@@ -29,7 +29,7 @@ import Data.List (intersperse)
 import qualified Data.ByteString as B
 import Data.Word (Word8)
 import Numeric (showFFloat)
-import Data.Text (Text,lines,unlines)
+import Data.Text (Text,lines,unlines,dropWhileEnd)
 import Data.Text.Encoding
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Builder (Builder)
@@ -147,8 +147,13 @@ instance Render LaTeX where
   renderBuilder (TeXMath Square l) = "\\[" <> renderBuilder l <> "\\]"
   renderBuilder (TeXMath Parentheses l) = "\\(" <> renderBuilder l <> "\\)"
 
-  renderBuilder (TeXLineBreak m b) = "\\\\" <> maybe mempty (\x -> "[" <> renderBuilder x <> "]") m <> ( if b then "*" else mempty )
-
+  -- It is not safe to simply say \\, if the text following it starts
+  -- with a left square bracket or a star you will get an error or
+  -- something unexpected.  I think this is why you see "\\%\n" so
+  -- often.  Here I supply a zero "extra vertical space" argument.
+  renderBuilder (TeXLineBreak m b) =
+    "\\\\" <> (if b then "*" else mempty) <>
+    "[" <> maybe (renderBuilder (Em 0.0)) renderBuilder m <> "]"
   renderBuilder (TeXBraces l) = "{" <> renderBuilder l <> "}"
 
   renderBuilder (TeXComment c) =
@@ -190,11 +195,10 @@ instance Render Integer where
 
 instance Render Float where
   renderBuilder = Builder.formatRealFloat Builder.Fixed (Just 5)
-  render = renderDefault
-
+  render = dropWhileEnd (== '.') . dropWhileEnd (== '0') . renderDefault
 instance Render Double where
   renderBuilder = Builder.formatRealFloat Builder.Fixed (Just 5)
-  render = renderDefault
+  render = dropWhileEnd (== '.') . dropWhileEnd (== '0') . renderDefault
 
 instance Render Word8 where
   renderBuilder = Builder.decimal

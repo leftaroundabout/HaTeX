@@ -5,9 +5,35 @@ This is the logchange of HaTeX. It is not exhaustive.
 For a full list of changes, see the commit history of the
 git repository:
 
-https://github.com/Daniel-Diaz/HaTeX/commits/master
+https://codeberg.org/daniel-casanueva/HaTeX/commits/branch/main
 
 # Changelog by versions
+
+## 3.23.0.1
+* Metadata update.
+* Drop gitlab CI.
+
+## 3.23.0.0
+* Rename `forall` as `forall_` (Patrick Ritzenfeld).
+* Drop trailing zeros and decimal point from rendered Floats and Doubles (David Fox).
+* Fix line break command formatting (David Fox).
+* Fix typo in `twoheadrightarrow` (Daniel Casanueva).
+
+## 3.22.4.2
+* Drop support for `base < 4.14`.
+* Support `hashable-1.5.0.0`.
+* Remove uses of CPP.
+
+## 3.22.4.1
+* QuickCheck instance fix.
+
+## 3.22.4.0
+* Define `(<>)` instead of `mappend`.
+* Use `fmap` instead of `liftM`.
+* New function: `applyDOIReferenceResolves`.
+* Make parser test more lenient (it was commented due to issue #144).
+* Metadata update.
+* Unify files `ReleaseNotes` and `CHANGELOG.md`.
 
 ## From 3.22.3.1 to 3.22.3.2
 * Relax transformers dependency upper bound from `< 0.6` to `< 0.7`.
@@ -134,3 +160,85 @@ Thanks to Douglas McClean (dmcclean@GitHub) for the AMSMath additions.
 * Modified LaTeX Monoid instance to make monoid laws hold.
 * Some documentation improvements.
 * Added this CHANGELOG!
+
+## 3.4
+
+* Num instance for LaTeXT.
+* New re-exports: liftIO.
+* Relaxed transformers package dependency to: >= 0.2.2 && < 0.4
+* Changed infix rule of (=:) and (/=:).
+* More documentation notes.
+* New functions: hfill, vfill.
+* The internal representation of LaTeXT has changed to prevent
+  a set of errors.
+* Changes in Text.LaTeX.
+* Several minor fixes.
+
+## 3.3
+
+* New functions 'protectString' and 'protectText'.
+* New function 'rendertexM'.
+* New environments: 'figure' and 'caption'.
+* New example: simple.hs.
+* Updated version of transfomers to 0.3.*.
+* Trees implemented: datatype and Qtree package.
+* Render instances for Integer and Double.
+* New docs.
+* Class system implemented. Monad modules dropped.
+
+## 3.2.0.1
+
+* This version only fix the patch that makes HaTeX compatible with GHC 7.4.
+
+## 3.2
+
+### Highlights:
+
+* Parser implemented (New dependency on parsec).
+* Greek alphabet added to AMSMath.
+* New LaTeX package: graphicx.
+* Function 'documentclass' changed.
+
+### Other changes:
+
+* Dependency changed from mtl to transformers.
+* New commands: par, textwidth and linewidth.
+* New environment: minipage.
+* Compatibility with GHC 7.4 (with CPP extension).
+* Function 'lift' is now re-exported in Text.LaTeX.Base.Writer module.
+* New function 'renderChars' in the Render module.
+* ReadMe edited, now with ToDo list.
+
+## 3.1.1
+
+* Dependency relaxed from 'mtl == 2.*' to 'transformers == 0.2.*'.
+
+## 3.1.0
+
+### Highlights:
+
+* Added warnings (See Text.LaTeX.Base.Warnings).
+* Added an "Examples" directory.
+* Num instance for LaTeX and LaTeXT.
+* New package implemented "AMSThm" (See Text.LaTeX.Packages.AMSThm).
+
+### Changes by modules:
+
+Base modules:
+
+* Text.LaTeX.Base.Syntax: Added Eq instance to LaTeX and TeXArg.
+* Text.LaTeX.Base.Writer: Added MonadTrans instance to LaTeXT.
+    New functions: execLaTeXTWarn, liftFun, liftOp.
+* Text.LaTeX.Base.Types: Added Eq instance to Label.
+* Text.LaTeX.Base: Added Num instance to LaTeX.
+* Text.LaTeX.Base.Monad: Added Num instance to LaTeXT.
+* Text.LaTeX.Base.Commands: New function: between.
+
+Package modules:
+
+* Text.LaTeX.Packages.AMSMath: New symbols: (=:) , (/=:) , forall
+    , dagger, ddagger, in_ , ni, (<:) , (<=:), (>:) , (>=:)
+
+## 3.0.0
+
+* First release of the third version of HaTeX.
